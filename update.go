@@ -5,6 +5,7 @@ import (
 	"github.com/zofan/go-fwrite"
 	"github.com/zofan/go-req"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strings"
 	"time"
@@ -15,6 +16,8 @@ func Update() error {
 		httpClient = req.New(req.DefaultConfig)
 		list       = make(map[string]*Country)
 	)
+
+	nameRe := regexp.MustCompile(` \([^\)]+\)`)
 
 	var tmp = []struct {
 		Alpha2Code     string    `json:"alpha2Code"`
@@ -64,11 +67,11 @@ func Update() error {
 		}
 
 		c := &Country{
-			Alpha2:  tc.Alpha2Code,
-			Alpha3:  tc.Alpha3Code,
-			Numeric: tc.NumericCode,
+			Alpha2:  strings.TrimSpace(tc.Alpha2Code),
+			Alpha3:  strings.TrimSpace(tc.Alpha3Code),
+			Numeric: strings.TrimSpace(tc.NumericCode),
 
-			Name:       tc.Name,
+			Name:       strings.TrimSpace(nameRe.ReplaceAllString(tc.Name, ` `)),
 			NativeName: tc.NativeName,
 			FlagURL:    `https://www.countryflags.io/` + tc.Alpha2Code + `/shiny/64.png`,
 
