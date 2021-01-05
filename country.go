@@ -25,3 +25,33 @@ type Country struct {
 	Currencies []string
 	TLDs       []string
 }
+
+func ByAlpha3(v string) *Country {
+	for _, c := range List {
+		if c.Alpha3 == v {
+			return &c
+		}
+	}
+
+	return nil
+}
+
+func ByAlpha2(v string) *Country {
+	for _, c := range List {
+		if c.Alpha2 == v {
+			return &c
+		}
+	}
+
+	return nil
+}
+
+func ByNumeric(v string) *Country {
+	for _, c := range List {
+		if c.Numeric == v {
+			return &c
+		}
+	}
+
+	return nil
+}
