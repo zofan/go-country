@@ -9,6 +9,8 @@ type Country struct {
 
 	Name       string
 	NativeName string
+	AltNames   []string
+	Tags       []string
 	FlagURL    string
 
 	Area       float64
@@ -28,29 +30,9 @@ type Country struct {
 	TLDs       []string
 }
 
-func ByAlpha3(v string) *Country {
+func Get(v string) *Country {
 	for _, c := range List {
-		if c.Alpha3 == v {
-			return &c
-		}
-	}
-
-	return nil
-}
-
-func ByAlpha2(v string) *Country {
-	for _, c := range List {
-		if c.Alpha2 == v {
-			return &c
-		}
-	}
-
-	return nil
-}
-
-func ByNumeric(v string) *Country {
-	for _, c := range List {
-		if c.Numeric == v {
+		if c.Alpha3 == v || c.Alpha2 == v || c.Numeric == v {
 			return &c
 		}
 	}
@@ -74,6 +56,22 @@ func ByName(v string) *Country {
 
 		if strings.Contains(n, v) || strings.Contains(n2, v) || strings.Contains(v, n) || strings.Contains(v, n2) {
 			return &c
+		}
+
+		for _, n := range c.AltNames {
+			n = fn(n)
+
+			if strings.Contains(n, v) || strings.Contains(v, n) {
+				return &c
+			}
+		}
+
+		for _, n := range c.Tags {
+			n = fn(n)
+
+			if strings.Contains(n, v) || strings.Contains(v, n) {
+				return &c
+			}
 		}
 	}
 

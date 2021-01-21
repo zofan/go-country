@@ -107,6 +107,10 @@ func Update() error {
 		list[c.Alpha3] = c
 	}
 
+	// ---
+
+	updateTags(list)
+
 	var tpl []string
 
 	tpl = append(tpl, `package country`)
@@ -137,6 +141,8 @@ func Update() error {
 		tpl = append(tpl, `		TimeZones:  `+fmt.Sprintf(`%#v`, c.TimeZones)+`,`)
 		tpl = append(tpl, `		Languages:  `+fmt.Sprintf(`%#v`, c.Languages)+`,`)
 		tpl = append(tpl, `		Currencies: `+fmt.Sprintf(`%#v`, c.Currencies)+`,`)
+		tpl = append(tpl, `		Tags:       `+fmt.Sprintf(`%#v`, c.Tags)+`,`)
+		tpl = append(tpl, `		AltNames:   `+fmt.Sprintf(`%#v`, c.AltNames)+`,`)
 		tpl = append(tpl, `	},`)
 	}
 
@@ -147,4 +153,26 @@ func Update() error {
 	dir := filepath.Dir(file)
 
 	return fwrite.WriteRaw(dir+`/country_db.go`, []byte(strings.Join(tpl, "\n")))
+}
+
+func updateTags(list map[string]*Country) {
+	wordSplitRe := regexp.MustCompile(`[^\p{L}\p{N}]+`)
+	wordMap := map[string][]*Country{}
+
+	for _, c := range list {
+		name := strings.ToLower(c.Name + ` ` + c.NativeName + ` ` + strings.Join(c.AltNames, ` `))
+		words := wordSplitRe.Split(name, -1)
+		for _, w := range words {
+			if len(w) > 0 {
+				wordMap[w] = append(wordMap[w], c)
+			}
+		}
+		c.Tags = []string{}
+	}
+
+	for w, cs := range wordMap {
+		if len(cs) == 1 {
+			cs[0].Tags = append(cs[0].Tags, w)
+		}
+	}
 }
