@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+// https://www.globalfirepower.com/countries-listing.asp
+// https://www.numbeo.com/quality-of-life/rankings_current.jsp
+// https://en.wikipedia.org/wiki/List_of_next_general_elections
+
 func Update() error {
 	var (
 		httpClient = req.New(req.DefaultConfig)
