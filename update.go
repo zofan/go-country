@@ -21,7 +21,7 @@ func Update() error {
 		list       = make(map[string]*Country)
 	)
 
-	nameRe := regexp.MustCompile(` \([^\)]+\)`)
+	nameRe := regexp.MustCompile(` \([^)]+\)`)
 
 	var tmp = []struct {
 		Alpha2Code     string    `json:"alpha2Code"`
