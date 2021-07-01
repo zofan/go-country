@@ -12,6 +12,7 @@ type Country struct {
 	AltNames   []string
 	Tags       []string
 	FlagURL    string
+	FlagEmoji  string
 
 	Area       float64
 	Population float64
